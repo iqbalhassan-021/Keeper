@@ -18,7 +18,7 @@ export default function Splash() {
       };
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
       <View style={styles.SplashCardTop}>
         <Image 
           source={require('../Assets/E-Wallet-pana.png')}
