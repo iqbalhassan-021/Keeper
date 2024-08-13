@@ -4,18 +4,9 @@ import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
 
 
-export default function Splash() {
+export default function Splash ({ navigation }) {
  
-    const ShowAlert = () => {
-        Alert.alert(
-          'Alert',
-          'This is an alert message',
-          [
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
-          ],
-          { cancelable: false }
-        );
-      };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
@@ -34,7 +25,7 @@ export default function Splash() {
           management with Keeper's intuitive interface and robust
           protection features.
         </Text>
-        <TouchableOpacity style={styles.button} onPress={ShowAlert}>
+        <TouchableOpacity style={styles.button}   onPress={() => navigation.navigate('Home')}>
           <Text style={styles.buttonText}>{'>'}</Text>
         </TouchableOpacity>
       </View>
