@@ -31,12 +31,12 @@ export default function App() {
     // </NavigationContainer>
   // <Splash></Splash>
   // <Home></Home>
-  // <AddCard></AddCard>
+   <AddCard></AddCard>
   // <Auth></Auth>
   // <Login></Login>
   // <RegisterUser></RegisterUser>
   // <MyCards></MyCards>
   // <Pin></Pin>
-  <User></User>
+  // <User></User>
   );
 };

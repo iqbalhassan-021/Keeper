@@ -1,12 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { openDatabase, createTables, insertLoginCredentials, insertCreditCard, getLoginCredentials, getCreditCards } from '../database';
 export default function AddCard() {
+  const [cardName, setCardName] = useState('');
+  const [cardType, setCardType] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCVV, setCardCVV] = useState('');
+
+  const handleAddCard = async () => {
+    if (cardName && cardType && cardNumber && cardExpiry && cardCVV) {
+      await insertCreditCard(cardName, cardType, cardNumber, cardExpiry, cardCVV);
+      const cardsFromDB = await getCreditCards();
+      setCards(cardsFromDB);
+      setCardName('');
+      setCardType('');
+      setCardNumber('');
+      setCardExpiry('');
+      setCardCVV('');
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
+    <SafeAreaView style={styles.container}>
+  
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.back}>
           <Text style={styles.buttonText}>{'<'}</Text>
@@ -27,6 +47,7 @@ export default function AddCard() {
             style={styles.input}
             placeholder="Bank Name"
             placeholderTextColor="gray"
+            onChangeText={setCardName}
           />
         </View>
         <View style={styles.tab}>
@@ -73,7 +94,7 @@ export default function AddCard() {
           <Text style={[styles.GoodText, { fontSize: 20 }]}>ADD</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
