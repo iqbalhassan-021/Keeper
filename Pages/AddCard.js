@@ -1,32 +1,70 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert, Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native'; 
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { openDatabase, createTables, insertLoginCredentials, insertCreditCard, getLoginCredentials, getCreditCards } from '../database';
-export default function AddCard() {
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+
+const AddCard = () => {
   const [cardName, setCardName] = useState('');
   const [cardType, setCardType] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCVV, setCardCVV] = useState('');
+  const [permissionGranted, setPermissionGranted] = useState(true); // Assume permission is granted
 
   const handleAddCard = async () => {
-    if (cardName && cardType && cardNumber && cardExpiry && cardCVV) {
-      await insertCreditCard(cardName, cardType, cardNumber, cardExpiry, cardCVV);
-      const cardsFromDB = await getCreditCards();
-      setCards(cardsFromDB);
-      setCardName('');
-      setCardType('');
-      setCardNumber('');
-      setCardExpiry('');
-      setCardCVV('');
+    if (permissionGranted) { // Check if permission is granted
+      if (cardName && cardType && cardNumber && cardExpiry && cardCVV) {
+        const cardData = {
+          cardName,
+          cardType,
+          cardNumber,
+          cardExpiry,
+          cardCVV
+        };
+
+        try {
+          const existingCards = await AsyncStorage.getItem('cards');
+          const cardsArray = existingCards ? JSON.parse(existingCards) : [];
+
+          // Add new card to the existing array
+          cardsArray.push(cardData);
+
+          // Store updated data back to AsyncStorage
+          await AsyncStorage.setItem('cards', JSON.stringify(cardsArray));
+
+          console.log('Data Written Successfully!!!');
+          Alert.alert('Card Added Successfully!!!');
+        } catch (error) {
+          console.error('Error saving data:', error); // Use console.error for errors
+          Alert.alert('An error occurred: ' + error.message);
+        }
+
+        // Reset the form
+        setCardName('');
+        setCardType('');
+        setCardNumber('');
+        setCardExpiry('');
+        setCardCVV('');
+      } else {
+        Alert.alert('Please fill all the fields');
+      }
+    } else {
+      Alert.alert('Storage permission is required to save cards.');
     }
   };
 
+  useEffect(() => {
+    const requestStoragePermission = async () => {
+      // Assuming permission is granted since we are using AsyncStorage
+      setPermissionGranted(true);
+    };
+
+    requestStoragePermission();
+  }, []); // Run only once on mount
+
   return (
     <SafeAreaView style={styles.container}>
-  
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.back}>
           <Text style={styles.buttonText}>{'<'}</Text>
@@ -37,10 +75,10 @@ export default function AddCard() {
       </View>
       <ScrollView style={styles.ScrollView} contentContainerStyle={styles.scrollContent}>
         <View style={styles.VectorHolder}>
-            <Image
-                style={styles.Vector}
-                source={require('../Assets/Wallet-pana.png')}
-            />
+          <Image
+            style={styles.Vector}
+            source={require('../Assets/Wallet-pana.png')}
+          />
         </View>
         <View style={styles.tab}>
           <TextInput
@@ -55,6 +93,7 @@ export default function AddCard() {
             style={styles.input}
             placeholder="Holder Name"
             placeholderTextColor="gray"
+            onChangeText={setCardType}
           />
         </View>
         <View style={styles.tab}>
@@ -62,41 +101,45 @@ export default function AddCard() {
             style={styles.input}
             placeholder="Card Number"
             placeholderTextColor="gray"
-             keyboardType='numeric'
+            keyboardType="numeric"
+            onChangeText={setCardNumber}
           />
         </View>
         <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <View style={styles.left}>
             <TextInput
-              style={[styles.input, { width: 91 }]} // Relative width
+              style={[styles.input, { width: 91 }]}
               placeholder="MM"
               placeholderTextColor="gray"
-               keyboardType='numeric'
+              keyboardType="numeric"
+              onChangeText={(text) => setCardExpiry(text + '/')} // Just for the format
             />
             <Text style={styles.GoodText}>/</Text>
             <TextInput
-              style={[styles.input, { width: 91 }]} // Relative width
+              style={[styles.input, { width: 91 }]}
               placeholder="YY"
               placeholderTextColor="gray"
-               keyboardType='numeric'
+              keyboardType="numeric"
+              onChangeText={(text) => setCardExpiry(prev => prev + text)}
             />
           </View>
           <View style={styles.right}>
             <TextInput
-              style={[styles.input, { width: 91 }]} // Relative width
+              style={[styles.input, { width: 91 }]}
               placeholder="CVV"
               placeholderTextColor="gray"
-              keyboardType='numeric'
+              keyboardType="numeric"
+              onChangeText={setCardCVV}
             />
           </View>
         </View>
-        <TouchableOpacity style={styles.PrimaryButton}>
+        <TouchableOpacity style={styles.PrimaryButton} onPress={handleAddCard}>
           <Text style={[styles.GoodText, { fontSize: 20 }]}>ADD</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -187,3 +230,5 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 });
+
+export default AddCard;

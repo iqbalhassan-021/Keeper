@@ -1,0 +1,10 @@
+[
+    {
+      "cardName": "Bank Name",
+      "cardType": "Holder Name",
+      "cardNumber": "1234 5678 9123 4567",
+      "cardExpiry": "MM/YY",
+      "cardCVV": "123"
+    }
+  ]
+  

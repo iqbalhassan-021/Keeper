@@ -1,9 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MyCards() {
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const existingCards = await AsyncStorage.getItem('cards');
+        const cardsArray = existingCards ? JSON.parse(existingCards) : [];
+        setCards(cardsArray);
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+        Alert.alert('An error occurred while fetching cards.');
+      }
+    };
+
+    fetchCards();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
@@ -13,87 +31,30 @@ export default function MyCards() {
           <Text style={styles.buttonText}>{'<'}</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView  style={styles.ScrollView} contentContainerStyle={styles.scrollContent}>
-      <View style={styles.CardHolder}>
-    
-        <View style={styles.Card}>
-          <View style={styles.CardNameHolder}>
-            <Text style={styles.CardText}>Card Name</Text>
-          </View>
-          <View style={styles.AdditionalDrtails}>
-            <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
-            <View style={styles.tab}>
-              <Text style={styles.CardText}>5300 1234 5678 9012</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>11/23</Text>
-              <Text style={styles.CardText}>CVV: 456</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>HASSAN ASHFAQ</Text>
-              <Text style={styles.CardText}>MASTER CARD</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.Card}>
-          <View style={styles.CardNameHolder}>
-            <Text style={styles.CardText}>Card Name</Text>
-          </View>
-          <View style={styles.AdditionalDrtails}>
-            <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
-            <View style={styles.tab}>
-              <Text style={styles.CardText}>5300 1234 5678 9012</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>11/23</Text>
-              <Text style={styles.CardText}>CVV: 456</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>HASSAN ASHFAQ</Text>
-              <Text style={styles.CardText}>MASTER CARD</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.Card}>
-          <View style={styles.CardNameHolder}>
-            <Text style={styles.CardText}>Card Name</Text>
-          </View>
-          <View style={styles.AdditionalDrtails}>
-            <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
-            <View style={styles.tab}>
-              <Text style={styles.CardText}>5300 1234 5678 9012</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>11/23</Text>
-              <Text style={styles.CardText}>CVV: 456</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>HASSAN ASHFAQ</Text>
-              <Text style={styles.CardText}>MASTER CARD</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.Card}>
-          <View style={styles.CardNameHolder}>
-            <Text style={styles.CardText}>Card Name</Text>
-          </View>
-          <View style={styles.AdditionalDrtails}>
-            <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
-            <View style={styles.tab}>
-              <Text style={styles.CardText}>5300 1234 5678 9012</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>11/23</Text>
-              <Text style={styles.CardText}>CVV: 456</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>HASSAN ASHFAQ</Text>
-              <Text style={styles.CardText}>MASTER CARD</Text>
-            </View>
-          </View>
-        </View>
       
-      </View>
+      <ScrollView style={styles.ScrollView} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.CardHolder}>
+          {cards.map((card, index) => (
+            <View key={index} style={styles.Card}>
+              <View style={styles.CardNameHolder}>
+                <Text style={styles.CardText}>{card.cardName}</Text>
+              </View>
+              <View style={styles.AdditionalDrtails}>
+                <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
+                <View style={styles.tab}>
+                  <Text style={styles.CardText}>{card.cardNumber}</Text>
+                </View>
+                <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+                  <Text style={styles.CardText}>{card.cardExpiry}</Text>
+                  <Text style={styles.CardText}>CVV: {card.cardCVV}</Text>
+                </View>
+                <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+                  <Text style={styles.CardText}>{card.cardType}</Text>
+                </View>
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </View>
   );
@@ -116,44 +77,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 32,
   },
-  ProfileLogo: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'black',
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 100,
-  },
   CardHolder: {
     width: '100%',
-    
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  CardList: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: '#0F1013',
-    borderRadius: 10,
-  },
-  StackHolder: {
-    padding: 10,
-    backgroundColor: '#0F1013',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  Bar: {
-    height: 5,
-    width: 97,
-    backgroundColor: 'white',
-    borderRadius: 8,
   },
   Card: {
     height: 221,
@@ -161,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#C53F3F',
     borderRadius: 8,
     elevation: 5,
-    marginTop:20,
+    marginTop: 20,
   },
   CardNameHolder: {
     backgroundColor: "#C53F3F",
@@ -188,16 +116,14 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 8,
   },
-
   ScrollView: {
     width: '100%',
-
   },
   scrollContent: {
     paddingBottom: 20,  // Optional: To add padding at the bottom for better UX
   },
-  buttonText:{
+  buttonText: {
     color: 'white',
-    fontSize:26,
+    fontSize: 26,
   },
 });

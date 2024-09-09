@@ -1,8 +1,32 @@
 {
   "expo": {
     "name": "Keeper",
-    "slug": "Keeper",
-    "version": "1.0.0"
-  },
-  "name": "Keeper"
+    "slug": "keeper",  
+    "version": "1.0.0",
+    "orientation": "portrait",  
+    "icon": "",  
+    "splash": {
+      "image": "",  
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": ""
+    }
+  }
 }
