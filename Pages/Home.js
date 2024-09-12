@@ -1,13 +1,74 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
+  const [cards, setCards] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const existingCards = await AsyncStorage.getItem('cards');
+        const cardsArray = existingCards ? JSON.parse(existingCards) : [];
+        setCards(cardsArray);
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+        Alert.alert('An error occurred while fetching cards.');
+      }
+    };
+
+    fetchCards();
+  }, []);
+
+  const renderCard = (card) => {
+    return (
+      <View style={styles.Card}>
+        <View style={styles.CardNameHolder}>
+          <Text style={styles.CardText}>{card.cardName}</Text>
+        </View>
+        <View style={styles.AdditionalDrtails}>
+          <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
+          <View style={styles.tab}>
+            <Text style={styles.CardText}>{card.cardNumber}</Text>
+          </View>
+          <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+            <Text style={styles.CardText}>{card.cardExpiry}</Text>
+            <Text style={styles.CardText}>CVV: {card.cardCVV}</Text>
+          </View>
+          <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+            <Text style={styles.CardText}>{card.cardHolder}</Text>
+            <Text style={styles.CardText}>{card.cardType}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderRecentCards = () => {
+    return cards.map((card, index) => (
+      <TouchableOpacity key={index} style={styles.RecentCard} onPress={() => setSelectedCard(card)}>
+        <View style={styles.leftPart}>
+          <View style={styles.CardiconHolder}>
+            <Image source={require('../Assets/card.png')} style={styles.CardLogo} />
+          </View>
+          <View style={styles.InfoPart}>
+            <Text style={styles.InfoText}>{card.cardName}</Text>
+            <Text style={[styles.InfoText, { color: '#7A7A7A', fontSize: 12 }]}>{card.cardType}</Text>
+          </View>
+        </View>
+        <View style={styles.RightPart}>
+          <Image source={require('../Assets/arrow.png')} style={styles.CardLogo} />
+        </View>
+      </TouchableOpacity>
+    ));
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
-      
+    <SafeAreaView style={styles.container}>
       <View style={styles.topBar}>
         <Text style={styles.Title}>Hey, Hassan</Text>
         <TouchableOpacity style={styles.ProfileLogo}>
@@ -16,25 +77,15 @@ export default function Home() {
       </View>
 
       <View style={styles.CardHolder}>
-        <View style={styles.Card}>
-          <View style={styles.CardNameHolder}>
-            <Text style={styles.CardText}>Card Name</Text>
-          </View>
-          <View style={styles.AdditionalDrtails}>
-            <View style={{ height: 50, width: '100%', backgroundColor: 'black' }}></View>
-            <View style={styles.tab}>
-              <Text style={styles.CardText}>5300 1234 5678 9012</Text>
+        {selectedCard ? renderCard(selectedCard) : (
+          cards.length > 0 ? renderCard(cards[cards.length - 1]) : (
+            <View style={styles.Card}>
+              <View style={styles.CardNameHolder}>
+                <Text style={styles.CardText}>No cards added</Text>
+              </View>
             </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>11/23</Text>
-              <Text style={styles.CardText}>CVV: 456</Text>
-            </View>
-            <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-              <Text style={styles.CardText}>HASSAN ASHFAQ</Text>
-              <Text style={styles.CardText}>MASTER CARD</Text>
-            </View>
-          </View>
-        </View>
+          )
+        )}
       </View>
 
       <View style={styles.CardList}>
@@ -43,30 +94,15 @@ export default function Home() {
 
           <View style={[styles.tab, { backgroundColor: '#0F1013', padding: 0, marginTop: 20 }]}>
             <ScrollView style={styles.ScrollView} contentContainerStyle={styles.scrollContent}>
-              {Array(4).fill().map((_, index) => (
-                <TouchableOpacity key={index} style={styles.RecentCard}>
-                  <View style={styles.leftPart}>
-                    <View style={styles.CardiconHolder}>
-                      <Image source={require('../Assets/card.png')} style={styles.CardLogo} />
-                    </View>
-                    <View style={styles.InfoPart}>
-                      <Text style={styles.InfoText}>Bank Name</Text>
-                      <Text style={[styles.InfoText, { color: '#7A7A7A', fontSize: 12 }]}>Added on</Text>
-                      <Text style={[styles.InfoText, { color: '#7A7A7A', fontSize: 12 }]}>Master Card</Text>
-                    </View>
-                  </View>
-                  <View style={styles.RightPart}>
-                    <Image source={require('../Assets/arrow.png')} style={styles.CardLogo} />
-                  </View>
-                </TouchableOpacity>
-              ))}
+              {renderRecentCards()}
             </ScrollView>
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -126,7 +162,7 @@ const styles = StyleSheet.create({
   },
   Card: {
     height: 221,
-    width: 395,
+    width: '100%',
     backgroundColor: '#C53F3F',
     borderRadius: 8,
     elevation: 5,

@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
+
 import React from 'react';
-import { StyleSheet, Text, View, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
 
 
@@ -8,8 +8,8 @@ export default function Splash ({ navigation }) {
  
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
+    <SafeAreaView style={styles.container}>
+      
       <View style={styles.SplashCardTop}>
         <Image 
           source={require('../Assets/E-Wallet-pana.png')}
@@ -29,7 +29,7 @@ export default function Splash ({ navigation }) {
           <Text style={styles.buttonText}>{'>'}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

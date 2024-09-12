@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Import 
 const AddCard = () => {
   const [cardName, setCardName] = useState('');
   const [cardType, setCardType] = useState('');
+  const [cardHolder, setcardHolder] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCVV, setCardCVV] = useState('');
@@ -20,7 +21,8 @@ const AddCard = () => {
           cardType,
           cardNumber,
           cardExpiry,
-          cardCVV
+          cardCVV,
+          cardHolder
         };
 
         try {
@@ -46,6 +48,7 @@ const AddCard = () => {
         setCardNumber('');
         setCardExpiry('');
         setCardCVV('');
+        setcardHolder('');
       } else {
         Alert.alert('Please fill all the fields');
       }
@@ -87,13 +90,23 @@ const AddCard = () => {
             placeholderTextColor="gray"
             onChangeText={setCardName}
           />
+          
+        </View>
+        <View style={styles.tab}>
+          <TextInput
+            style={styles.input}
+            placeholder="Card Type"
+            placeholderTextColor="gray"
+            onChangeText={setCardType}
+          />
+          
         </View>
         <View style={styles.tab}>
           <TextInput
             style={styles.input}
             placeholder="Holder Name"
             placeholderTextColor="gray"
-            onChangeText={setCardType}
+            onChangeText={setcardHolder}
           />
         </View>
         <View style={styles.tab}>

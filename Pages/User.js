@@ -1,19 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, Linking, TextInput, ScrollView, View, Image, Alert, Dimensions, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, Linking, TextInput, ScrollView, View, Image, Alert, Dimensions, Button, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+export default function User({ navigation }) { 
+   const [cards, setCards] = useState([]);
 
-export default function User({ navigation }) {
-    const handleConnect = () => {
-       
-        const url = 'https://www.linkedin.com/in/iqbal-hassan-b156b5314/';
-        Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
-      };
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const existingCards = await AsyncStorage.getItem('cards');
+        const cardsArray = existingCards ? JSON.parse(existingCards) : [];
+        setCards(cardsArray);
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+        Alert.alert('An error occurred while fetching cards.');
+      }
+    };
+
+    fetchCards();
+  }, []);
+
+  const handleConnect = () => {
+    const url = 'https://www.linkedin.com/in/iqbal-hassan-b156b5314/';
+    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+  };
+
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
+    <SafeAreaView style={styles.container}>
+    
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.back}>
+        <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Home')}> 
           <Text style={styles.buttonText}>{'<'}</Text>
         </TouchableOpacity>
       </View>
@@ -26,7 +43,7 @@ export default function User({ navigation }) {
                 Hassan Ashfaq
             </Text>
             <Text style={{color:'white',fontSize:20,}}>
-                Cards : 4
+            Cards : {cards.length}
             </Text>
           </View>
        </View>
@@ -53,16 +70,9 @@ export default function User({ navigation }) {
                 </Text>
             </TouchableOpacity>
       </View>
-    
-      <View style={styles.tab}>
-            <TouchableOpacity style={styles.PrimaryButton}> 
-                <Text style={styles.GoodText}>
-                    Logout
-                </Text>
-            </TouchableOpacity>
-      </View>
+
     </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -142,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize:18,
   },
   tabItem:{
-    width: 396,
+    width: '97%',
     height:120,
     backgroundColor:'#000000',
     borderRadius:8,

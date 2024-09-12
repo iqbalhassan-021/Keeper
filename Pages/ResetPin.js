@@ -4,21 +4,31 @@ import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert, Dimensions
 import { TouchableOpacity } from 'react-native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
-export default function RegisterUser({ navigation })  {
-  const [username, setUsername] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [pin, setPin] = useState('');
+export default function ResetPin({ navigation })  {
+  const [name, setname] = useState('');
+  const [userPin, setuserPin] = useState('');
 
-  const handleRegister = async () => {
+  const handleReset = async () => {
     try {
-      const userData = { username, fullName, pin };
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      Alert.alert('Registration Successful');
-   
-     // navigation.navigate('Home'); // Navigate to the home screen
-    } catch (error) {
-      console.error('Error saving user:', error);
-    }
+        const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
+        if (userData !== null) {
+          const { pin } = JSON.parse(userData); // Parse the user data and extract the pin
+          const { username } = JSON.parse(userData);
+          if(name === username || userPin === pin){
+            //navigation.navigate('Home'); // Navigate to the Home screen if the pin is correct
+            alert('Success');
+            setuserPin('');
+            setname('');
+          }
+          else{
+            alert('Invalid Pin');
+            setuserPin('');
+            setname('');
+            }
+        }
+      } catch (error) {
+        console.error('Error loading pin:', error);
+      }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -39,17 +49,13 @@ export default function RegisterUser({ navigation })  {
     </View>
 
     <View style={[styles.tab]}>
-    <TextInput
-            style={styles.input}
-            placeholder="Full Name..."
-            placeholderTextColor="gray"
-            onChangeText={setFullName}
-          />
+
     <TextInput
             style={styles.input}
             placeholder="username..."
             placeholderTextColor="gray"
-            onChangeText={setUsername}
+            value={name}
+            onChangeText={setname}
           />
 
             <TextInput
@@ -58,14 +64,15 @@ export default function RegisterUser({ navigation })  {
             placeholderTextColor="gray"
             secureTextEntry ={true} 
             keyboardType='numeric'
-            onChangeText={setPin}
+            value={userPin}
+            onChangeText={setuserPin}
           />
         <TouchableOpacity
         style={[styles.PrimaryButton,{backgroundColor:'#C53F3F'}]}
-        onPress={handleRegister}
+        onPress={handleReset}
         >
             <Text style={styles.GoodText}>
-                Signup
+                Reset
             </Text>
         </TouchableOpacity> 
       

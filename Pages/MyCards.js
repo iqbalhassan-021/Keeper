@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Alert, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function MyCards() {
   const [cards, setCards] = useState([]);
@@ -23,9 +24,9 @@ export default function MyCards() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="white" translucent={false} />
-      
+
+    <SafeAreaView style={styles.container}>
+
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.back}>
           <Text style={styles.buttonText}>{'<'}</Text>
@@ -49,6 +50,7 @@ export default function MyCards() {
                   <Text style={styles.CardText}>CVV: {card.cardCVV}</Text>
                 </View>
                 <View style={[styles.tab, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+                  <Text style={styles.CardText}>{card.cardHolder}</Text>
                   <Text style={styles.CardText}>{card.cardType}</Text>
                 </View>
               </View>
@@ -56,7 +58,7 @@ export default function MyCards() {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
