@@ -14,15 +14,15 @@ export default function RegisterUser({ navigation })  {
       const userData = { username, fullName, pin };
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       Alert.alert('Registration Successful');
-   
-     // navigation.navigate('Home'); // Navigate to the home screen
+      navigation.navigate('Home');
+     
     } catch (error) {
       console.error('Error saving user:', error);
     }
   };
   return (
     <SafeAreaView style={styles.container}>
-     
+     <StatusBar style="light" />
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Splash')}>
           <Text style={styles.buttonText}>{'<'}</Text>

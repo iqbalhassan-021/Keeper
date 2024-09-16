@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function MyCards() {
+export default function MyCards({ navigation }) {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
@@ -26,9 +26,9 @@ export default function MyCards() {
   return (
 
     <SafeAreaView style={styles.container}>
-
+ <StatusBar style="light" />
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.back}>
+        <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('User')}>
           <Text style={styles.buttonText}>{'<'}</Text>
         </TouchableOpacity>
       </View>

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Linking, TextInput, ScrollView, View, Image, Alert, Dimensions, Button, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function User({ navigation }) { 
    const [cards, setCards] = useState([]);
-
+   const [username, setUsername] = useState(''); // Add a state variable for username
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const existingCards = await AsyncStorage.getItem('cards');
+        const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
+        const { fullName: storedUsername } = JSON.parse(userData); // Parse the user data and extract the username
+        setUsername(storedUsername); // Update the username state
         const cardsArray = existingCards ? JSON.parse(existingCards) : [];
         setCards(cardsArray);
       } catch (error) {
@@ -28,7 +32,7 @@ export default function User({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-    
+    <StatusBar style="light" />
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Home')}> 
           <Text style={styles.buttonText}>{'<'}</Text>
@@ -40,7 +44,7 @@ export default function User({ navigation }) {
           <Image source={require('../Assets/avatar.png')} style={styles.image} />
           <View >
             <Text style={{color:'white',fontSize:20,}}>
-                Hassan Ashfaq
+                {username}
             </Text>
             <Text style={{color:'white',fontSize:20,}}>
             Cards : {cards.length}

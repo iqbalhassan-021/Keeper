@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
-const AddCard = () => {
+const AddCard = ({ navigation }) => {
   const [cardName, setCardName] = useState('');
   const [cardType, setCardType] = useState('');
   const [cardHolder, setcardHolder] = useState('');
@@ -35,10 +36,11 @@ const AddCard = () => {
           // Store updated data back to AsyncStorage
           await AsyncStorage.setItem('cards', JSON.stringify(cardsArray));
 
-          console.log('Data Written Successfully!!!');
+
           Alert.alert('Card Added Successfully!!!');
+          navigation.navigate('Home');
         } catch (error) {
-          console.error('Error saving data:', error); // Use console.error for errors
+
           Alert.alert('An error occurred: ' + error.message);
         }
 
@@ -68,8 +70,9 @@ const AddCard = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar style="light" />
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.back}>
+        <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('User')}>
           <Text style={styles.buttonText}>{'<'}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.ProfileLogo}>

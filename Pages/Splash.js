@@ -1,15 +1,30 @@
-
-import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Alert, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
-
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 export default function Splash ({ navigation }) {
- 
+  
+  const handleNavigation = async () =>{
+    try{
+      const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
+      if (userData !== null) {
+        navigation.navigate('Pin');
+      }
+      else{
+        navigation.navigate('RagisterUser');
+      }
+    }
+    catch(error){
+      console.error('Error getting data:', error);
+    }
+  };
+
 
   return (
     <SafeAreaView style={styles.container}>
-      
+      <StatusBar style="light" />
       <View style={styles.SplashCardTop}>
         <Image 
           source={require('../Assets/E-Wallet-pana.png')}
@@ -25,7 +40,7 @@ export default function Splash ({ navigation }) {
           management with Keeper's intuitive interface and robust
           protection features.
         </Text>
-        <TouchableOpacity style={styles.button}   onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.button}   onPress={handleNavigation}>
           <Text style={styles.buttonText}>{'>'}</Text>
         </TouchableOpacity>
       </View>

@@ -10,31 +10,32 @@ export default function ResetPin({ navigation })  {
 
   const handleReset = async () => {
     try {
-        const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
-        if (userData !== null) {
-          const { pin } = JSON.parse(userData); // Parse the user data and extract the pin
-          const { username } = JSON.parse(userData);
-          if(name === username || userPin === pin){
-            //navigation.navigate('Home'); // Navigate to the Home screen if the pin is correct
-            alert('Success');
-            setuserPin('');
-            setname('');
-          }
-          else{
-            alert('Invalid Pin');
-            setuserPin('');
-            setname('');
-            }
+      const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
+      if (userData !== null) {
+        const { pin, username } = JSON.parse(userData); // Parse the user data and extract the pin and username
+        if (name === username) {
+          // Update the pin with userPin
+          const updatedUserData = { ...JSON.parse(userData), pin: userPin };
+          await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+          alert('Pin updated');
+          navigation.navigate('Pin');
+          setuserPin('');
+          setname('');
+        } else {
+          alert('Invalid username');
+          setuserPin('');
+          setname('');
         }
-      } catch (error) {
-        console.error('Error loading pin:', error);
       }
+    } catch (error) {
+      console.error('Error loading pin:', error);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
-     
+     <StatusBar style="light" />
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Splash')}>
+        <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Pin')}>
           <Text style={styles.buttonText}>{'<'}</Text>
         </TouchableOpacity>
       </View>
@@ -60,7 +61,7 @@ export default function ResetPin({ navigation })  {
 
             <TextInput
             style={styles.input}
-            placeholder="Pin..."
+            placeholder="New Pin..."
             placeholderTextColor="gray"
             secureTextEntry ={true} 
             keyboardType='numeric'

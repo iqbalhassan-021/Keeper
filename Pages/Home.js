@@ -5,14 +5,18 @@ import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Home() {
+export default function Home({ navigation })  {
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [username, setUsername] = useState(''); // Add a state variable for username
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const existingCards = await AsyncStorage.getItem('cards');
+        const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
+        const { fullName: storedUsername } = JSON.parse(userData); // Parse the user data and extract the username
+        setUsername(storedUsername); // Update the username state
         const cardsArray = existingCards ? JSON.parse(existingCards) : [];
         setCards(cardsArray);
       } catch (error) {
@@ -69,9 +73,10 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="light" /> 
       <View style={styles.topBar}>
-        <Text style={styles.Title}>Hey, Hassan</Text>
-        <TouchableOpacity style={styles.ProfileLogo}>
+        <Text style={styles.Title}>Hey, {username}</Text>
+        <TouchableOpacity style={styles.ProfileLogo} onPress={() => navigation.navigate('User')}>
           <Image source={require('../Assets/avatar.png')} style={styles.image} />
         </TouchableOpacity>
       </View>

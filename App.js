@@ -20,28 +20,27 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    //  <NavigationContainer>
-    //    <Stack.Navigator initialRouteName="Splash">
-    //      <Stack.Screen name="Splash" component={Splash}   options={{ headerShown: false }}/>
-    //      <Stack.Screen name="Home" component={Home}   options={{ headerShown: false }}/>
-    //      <Stack.Screen name="AddCard" component={AddCard}   options={{ headerShown: false }}/>
-    //      <Stack.Screen name="Auth" component={Auth}   options={{ headerShown: false }}/>
-    //      <Stack.Screen name="Login" component={Login}   options={{ headerShown: false }}/>
-    //      <Stack.Screen name="RagisterUser" component={RagisterUser}   options={{ headerShown: false }}/>
-    //      <Stack.Screen name="MyCards" component={MyCards} />
-    //      <Stack.Screen name="Pin" component={Pin}   options={{ headerShown: false }}/>
-    //    </Stack.Navigator>
-    //  </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Splash">
+          <Stack.Screen name="Splash" component={Splash}   options={{ headerShown: false }}/>
+          <Stack.Screen name="Home" component={Home}   options={{ headerShown: false }}/>
+          <Stack.Screen name="AddCard" component={AddCard}   options={{ headerShown: false }}/>
+          <Stack.Screen name="RagisterUser" component={RagisterUser}   options={{ headerShown: false }}/>
+          <Stack.Screen name="MyCards" component={MyCards} options={{ headerShown: false }}/>
+          <Stack.Screen name="User" component={User} options={{ headerShown: false }}/>
+          <Stack.Screen name="Pin" component={Pin}   options={{ headerShown: false }}/>
+        </Stack.Navigator>
+      </NavigationContainer>
   // <Splash></Splash>
    //<Home></Home>
      //<AddCard></AddCard>
 
   // <Auth></Auth>
   //<Login></Login>
-   //<RegisterUser></RegisterUser>
+  //  <RegisterUser></RegisterUser>
    //<MyCards></MyCards>
-  // <Pin></Pin>
-  <ResetPin></ResetPin>
+  //  <Pin></Pin>
+  //  <ResetPin></ResetPin>
   // <User></User>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
@@ -12,8 +13,8 @@ export default function Pin({ navigation }) {
       if (userData !== null) {
         const { pin } = JSON.parse(userData); // Parse the user data and extract the pin
         if(userpin === pin){
-          //navigation.navigate('Home'); // Navigate to the Home screen if the pin is correct
-          alert('Success');
+          navigation.navigate('Home'); // Navigate to the Home screen if the pin is correct
+       
           setuserpin('');
         }
         else{
@@ -27,6 +28,7 @@ export default function Pin({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="light" />
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Splash')}>
           <Text style={styles.buttonText}>{'<'}</Text>
