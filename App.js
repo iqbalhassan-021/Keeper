@@ -1,16 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { name as appName } from './app.json';
-import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from './Pages/Splash';
 import Home from './Pages/Home';
 import AddCard from './Pages/AddCard';
-import Auth from './Pages/Auth';
-import Login from './Pages/LoginPage';
 import RagisterUser from './Pages/RegisterUser';
-import RegisterUser from './Pages/RegisterUser';
 import MyCards from './Pages/MyCards';
 import Pin from './Pages/Pin';
 import User from './Pages/User';
@@ -29,18 +23,9 @@ export default function App() {
           <Stack.Screen name="MyCards" component={MyCards} options={{ headerShown: false }}/>
           <Stack.Screen name="User" component={User} options={{ headerShown: false }}/>
           <Stack.Screen name="Pin" component={Pin}   options={{ headerShown: false }}/>
+          <Stack.Screen name="ResetPin" component={ResetPin}   options={{ headerShown: false }}/>
         </Stack.Navigator>
       </NavigationContainer>
-  // <Splash></Splash>
-   //<Home></Home>
-     //<AddCard></AddCard>
 
-  // <Auth></Auth>
-  //<Login></Login>
-  //  <RegisterUser></RegisterUser>
-   //<MyCards></MyCards>
-  //  <Pin></Pin>
-  //  <ResetPin></ResetPin>
-  // <User></User>
   );
 };

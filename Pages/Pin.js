@@ -45,7 +45,7 @@ export default function Pin({ navigation }) {
           onChangeText={setuserpin} // Update pin state
           onSubmitEditing={handlePinValidation}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Splash')}>
           <Text style={{color:'white'}}>Forgot pin</Text>
         </TouchableOpacity>
       </View>
