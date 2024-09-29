@@ -118,6 +118,7 @@ android {
             useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)
         }
     }
+
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`
