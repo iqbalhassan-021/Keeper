@@ -21,7 +21,6 @@ export default function Home({ navigation })  {
         setCards(cardsArray);
       } catch (error) {
         console.error('Error fetching cards:', error);
-        Alert.alert('An error occurred while fetching cards.');
       }
     };
 

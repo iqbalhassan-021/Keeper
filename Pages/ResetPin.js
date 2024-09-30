@@ -3,33 +3,55 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert, Dimensions, Button, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import Toast from 'react-native-toast-message';
 
 export default function ResetPin({ navigation })  {
   const [name, setname] = useState('');
   const [userPin, setuserPin] = useState('');
 
   const handleReset = async () => {
-    try {
-      const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
-      if (userData !== null) {
-        const { pin, username } = JSON.parse(userData); // Parse the user data and extract the pin and username
-        if (name === username) {
-          // Update the pin with userPin
-          const updatedUserData = { ...JSON.parse(userData), pin: userPin };
-          await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
-          alert('Pin updated');
-          navigation.navigate('Pin');
-          setuserPin('');
-          setname('');
-        } else {
-          alert('Invalid username');
-          setuserPin('');
-          setname('');
+    if(name && userPin){
+      try {
+        const userData = await AsyncStorage.getItem('user'); // Retrieve the saved user data
+        if (userData !== null) {
+          const { pin, username } = JSON.parse(userData); // Parse the user data and extract the pin and username
+          if (name === username) {
+            // Update the pin with userPin
+            const updatedUserData = { ...JSON.parse(userData), pin: userPin };
+            await AsyncStorage.setItem('user', JSON.stringify(updatedUserData));
+            Toast.show({
+              type: 'success',    // You can also use 'info' or 'success' as type
+              text1: 'Pin Updated',   // Corrected key
+              text2: 'you have successfuly updated the pin.',  // Message shown under the title
+              position: 'bottom',     // Optional: You can position the toast (top or bottom)
+            });
+            navigation.navigate('Pin');
+            setuserPin('');
+            setname('');
+          } else {
+            Toast.show({
+              type: 'error',    // You can also use 'info' or 'success' as type
+              text1: 'Error',   // Corrected key
+              text2: 'Invalid Username or Pin.',  // Message shown under the title
+              position: 'bottom',     // Optional: You can position the toast (top or bottom)
+            });
+            setuserPin('');
+            setname('');
+          }
         }
+      } catch (error) {
+        console.error('Error loading pin:', error);
       }
-    } catch (error) {
-      console.error('Error loading pin:', error);
     }
+    else{
+      Toast.show({
+        type: 'error',    // You can also use 'info' or 'success' as type
+        text1: 'Error',   // Corrected key
+        text2: 'User must fill all the fields.',  // Message shown under the title
+        position: 'bottom',     // Optional: You can position the toast (top or bottom)
+      });
+    }
+
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -78,7 +100,9 @@ export default function ResetPin({ navigation })  {
         </TouchableOpacity> 
       
     </View>
+
     </ScrollView>
+    <Toast />
     </SafeAreaView>
   );
 }

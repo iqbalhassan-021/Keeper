@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, ScrollView, View, Image, Alert, Dimensions, Button, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import Toast from 'react-native-toast-message';
 
 export default function RegisterUser({ navigation })  {
   const [username, setUsername] = useState('');
@@ -10,15 +11,32 @@ export default function RegisterUser({ navigation })  {
   const [pin, setPin] = useState('');
 
   const handleRegister = async () => {
-    try {
-      const userData = { username, fullName, pin };
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      Alert.alert('Registration Successful');
-      navigation.navigate('Home');
-     
-    } catch (error) {
-      console.error('Error saving user:', error);
+    if(username && fullName && pin){
+
+      try {
+        const userData = { username, fullName, pin };
+        await AsyncStorage.setItem('user', JSON.stringify(userData));
+        Toast.show({
+          type: 'success',    // You can also use 'info' or 'success' as type
+          text1: 'User Registered',   // Corrected key
+          text2: 'User Registered, user data is saved for login.',  // Message shown under the title
+          position: 'bottom',     // Optional: You can position the toast (top or bottom)
+        });
+        navigation.navigate('Home');
+       
+      } catch (error) {
+        console.error('Error saving user:', error);
+      }
     }
+    else{
+      Toast.show({
+        type: 'error',    // You can also use 'info' or 'success' as type
+        text1: 'Error',   // Corrected key
+        text2: 'User must fill all the fields.',  // Message shown under the title
+        position: 'bottom',     // Optional: You can position the toast (top or bottom)
+      });
+    }
+
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -70,7 +88,9 @@ export default function RegisterUser({ navigation })  {
         </TouchableOpacity> 
       
     </View>
+
     </ScrollView>
+    <Toast />
     </SafeAreaView>
   );
 }

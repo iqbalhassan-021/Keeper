@@ -15,8 +15,12 @@ export default function MyCards({ navigation }) {
         const cardsArray = existingCards ? JSON.parse(existingCards) : [];
         setCards(cardsArray);
       } catch (error) {
-        console.error('Error fetching cards:', error);
-        Alert.alert('An error occurred while fetching cards.');
+        Toast.show({
+          type: 'error',    // You can also use 'info' or 'success' as type
+          text1: 'Error',   // Corrected key
+          text2: 'Error fetching cards.',  // Message shown under the title
+          position: 'bottom',     // Optional: You can position the toast (top or bottom)
+        });
       }
     };
 
@@ -57,6 +61,7 @@ export default function MyCards({ navigation }) {
             </View>
           ))}
         </View>
+  
       </ScrollView>
     </SafeAreaView>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import Toast from 'react-native-toast-message';
 
 export default function Pin({ navigation }) {
 
@@ -18,7 +19,12 @@ export default function Pin({ navigation }) {
           setuserpin('');
         }
         else{
-          alert('Invalid Pin');
+          Toast.show({
+            type: 'error',    // You can also use 'info' or 'success' as type
+            text1: 'Invalid PIN',   // Corrected key
+            text2: 'The Pin is invalid! Please try again.',  // Message shown under the title
+            position: 'bottom',     // Optional: You can position the toast (top or bottom)
+          });
           }
       }
     } catch (error) {
@@ -45,10 +51,11 @@ export default function Pin({ navigation }) {
           onChangeText={setuserpin} // Update pin state
           onSubmitEditing={handlePinValidation}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('Splash')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPin')}>
           <Text style={{color:'white'}}>Forgot pin</Text>
         </TouchableOpacity>
       </View>
+      <Toast />
     </SafeAreaView>
   );
 }
